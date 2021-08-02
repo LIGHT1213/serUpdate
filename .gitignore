@@ -1,0 +1,9 @@
+
+*.db
+.\.vs
+.\Debug
+*.ipch
+*.obj
+*.tlog
+
+serUpdate/新建文本文档.txt
