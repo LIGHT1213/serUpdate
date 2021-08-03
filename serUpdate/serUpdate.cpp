@@ -1,6 +1,10 @@
+#pragma execution_character_set("utf-8")  
 #include "serUpdate.h"
 #include "serPortList.hpp"
 #include "seRec.hpp"
+#include "ispProgram.hpp"
+bool ackFlag = false;
+QSerialPort* mySerial = new QSerialPort();
 serUpdate::serUpdate(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -26,7 +30,7 @@ void serUpdate::onSerConnnectPushButtom_callback(void)
     {
         mySerial->setPortName(ui.serList->currentText());
         mySerial->setBaudRate(QSerialPort::Baud115200);
-        mySerial->setParity(QSerialPort::NoParity);
+        mySerial->setParity(QSerialPort::EvenParity);
         mySerial->setStopBits(QSerialPort::OneStop);
         mySerial->setDataBits(QSerialPort::Data8);
         if (mySerial->open(QIODevice::ReadWrite))
@@ -57,7 +61,7 @@ void serUpdate::onSerConnnectPushButtom_callback(void)
 */
 void serUpdate::startSerialRec()
 {
-    serialRecThread* updateSerial = new serialRecThread(mySerial);
+    serialRecThread* updateSerial = new serialRecThread(mySerial,this->serMutex);
     //new a thread
     QThread* UpdateSer = new QThread();
     //a timer 
@@ -70,7 +74,12 @@ void serUpdate::startSerialRec()
 }
 void serUpdate::UpdateSerialData(QString data)
 {
+    QString ackChar = 0x7f;
     this->serRecData = data;
+    if (this->serRecData[0] == ackChar)
+    {
+        ackFlag = true;
+    }
 }
 void serUpdate::onOpenFilePushButtom_callback()
 {
@@ -90,30 +99,31 @@ void serUpdate::onOpenFilePushButtom_callback()
 }
 void serUpdate::onUploadPushButtom_callback()
 {
+    ispProgramThread* ispSer = new ispProgramThread(mySerial,binData, ui.serList->currentText(), this->serMutex);
     QThread* ispThread = new QThread();
     QTimer* ispTimer = new QTimer(this);
     ispTimer->start(20);
-
-
-    mySerial->close();
-    mySerial->setPortName(ui.serList->currentText());
-    mySerial->setBaudRate(QSerialPort::Baud115200);
-    mySerial->setParity(QSerialPort::EvenParity);
-    mySerial->setStopBits(QSerialPort::OneStop);
-    mySerial->setDataBits(QSerialPort::Data8);
-    try {
-        mySerial->open(QIODevice::ReadWrite);
-    }
-    catch (...)
-    {
-        ui.downloadStatus->setText(this->codec->toUnicode("bootloaderÍ¨Ñ¶Ê§°Ü"));
-    }
-    mySerial->write(QByteArray::fromHex(&myUpdateCommand.serModeSelect));
-    waitForACK();
-
+    QObject::connect(ispTimer, SIGNAL(timeout()), ispSer, SLOT(run()));
+    ispSer->moveToThread(ispThread);
+    ispThread->start();
+    QObject::connect(ispSer, SIGNAL(onNewSerialIspStatus(qint8, QString)), this, SLOT(processIspStatus(qint8, QString)));
 }
-void serUpdate::waitForACK()
+void serUpdate::processIspStatus(qint8 processClass, QString data)
 {
-    if(this->serRecData==)
+    QByteArray Temp;
+    switch (processClass)
+    {
+    case 0:
+    {
+        Temp = data.toUtf8();
+        ui.downloadStatus->setText(this->codec->toUnicode(Temp));
+        break;
+    }
+    case 1:
+    {
+        break;
+    }
+    default:
+        break;
+    }
 }
-

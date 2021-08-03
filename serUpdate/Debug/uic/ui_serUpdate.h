@@ -58,13 +58,13 @@ public:
         openFile->setGeometry(QRect(470, 30, 93, 28));
         bootloadVer = new QLabel(centralWidget);
         bootloadVer->setObjectName(QString::fromUtf8("bootloadVer"));
-        bootloadVer->setGeometry(QRect(20, 70, 171, 16));
+        bootloadVer->setGeometry(QRect(20, 70, 271, 16));
         deviceID = new QLabel(centralWidget);
         deviceID->setObjectName(QString::fromUtf8("deviceID"));
-        deviceID->setGeometry(QRect(20, 120, 111, 16));
+        deviceID->setGeometry(QRect(20, 120, 281, 16));
         downloadStatus = new QLabel(centralWidget);
         downloadStatus->setObjectName(QString::fromUtf8("downloadStatus"));
-        downloadStatus->setGeometry(QRect(20, 170, 72, 15));
+        downloadStatus->setGeometry(QRect(20, 170, 271, 16));
         downloadProgress = new QProgressBar(centralWidget);
         downloadProgress->setObjectName(QString::fromUtf8("downloadProgress"));
         downloadProgress->setGeometry(QRect(340, 80, 118, 23));
@@ -95,7 +95,7 @@ public:
         deviceID->setText(QApplication::translate("serUpdateClass", "\350\212\257\347\211\207\345\207\272\345\234\272ID", nullptr));
         downloadStatus->setText(QApplication::translate("serUpdateClass", "\346\234\252\345\274\200\345\247\213", nullptr));
         upLoad->setText(QApplication::translate("serUpdateClass", "\345\274\200\345\247\213\344\270\213\350\275\275", nullptr));
-        fileRoute->setText(QApplication::translate("serUpdateClass", "TextLabel", nullptr));
+        fileRoute->setText(QApplication::translate("serUpdateClass", "\346\226\207\344\273\266\346\234\252\350\275\275\345\205\245", nullptr));
     } // retranslateUi
 
 };

@@ -24,6 +24,9 @@
     <Filter Include="Ser">
       <UniqueIdentifier>{ecb027f3-cb05-48b9-a7a4-7c7e7548ae9a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="isp">
+      <UniqueIdentifier>{ce50c266-85d3-4783-aecc-bb05fc63e9d3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="serUpdate.qrc">
@@ -49,12 +52,18 @@
     <ClCompile Include="seRec.cpp">
       <Filter>Ser</Filter>
     </ClCompile>
+    <ClCompile Include="ispProgram.cpp">
+      <Filter>isp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="seRec.hpp">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="serPortList.hpp">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="ispProgram.hpp">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

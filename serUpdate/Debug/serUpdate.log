@@ -1,7 +1,2 @@
 ﻿  serUpdate.cpp
-C:\Users\pan39\Desktop\qt\serUpdate\serUpdate\serUpdate.h(23,20): warning C5208: typedef 名称中使用的未命名的类不能声明非静态数据成员、成员枚举或成员类以外的成员
-  moc_seRec.cpp
-  moc_serUpdate.cpp
-C:\Users\pan39\Desktop\qt\serUpdate\serUpdate\serUpdate.h(23,20): warning C5208: typedef 名称中使用的未命名的类不能声明非静态数据成员、成员枚举或成员类以外的成员 (编译源文件 Debug\moc\moc_seRec.cpp)
-C:\Users\pan39\Desktop\qt\serUpdate\serUpdate\serUpdate.h(23,20): warning C5208: typedef 名称中使用的未命名的类不能声明非静态数据成员、成员枚举或成员类以外的成员 (编译源文件 Debug\moc\moc_serUpdate.cpp)
   serUpdate.vcxproj -> C:\Users\pan39\Desktop\qt\serUpdate\Debug\serUpdate.exe

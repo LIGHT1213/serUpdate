@@ -3,9 +3,10 @@ serialRecThread::serialRecThread()
 {
     //recSerialName=MainWindow::GetSerial();
 }
-serialRecThread::serialRecThread(QSerialPort* Serial)
+serialRecThread::serialRecThread(QSerialPort* Serial, QMutex* serMutex)
 {
     recSerialName=Serial;
+    serStringMutex = serMutex;
 }
 serialRecThread::~serialRecThread()
 {
@@ -14,6 +15,7 @@ serialRecThread::~serialRecThread()
 void serialRecThread::run()
 {
     //read()
+    this->serStringMutex->lock();
     QByteArray RecData;
     QString RecSting;
     qint64 byteNum=0;
@@ -28,6 +30,5 @@ void serialRecThread::run()
 
         }
     }
-    //QThread::msleep(10);
-
+    this->serStringMutex->unlock();
 }

@@ -88,6 +88,7 @@
     <QtRcc Include="serUpdate.qrc" />
     <QtUic Include="serUpdate.ui" />
     <QtMoc Include="serUpdate.h" />
+    <ClCompile Include="ispProgram.cpp" />
     <ClCompile Include="seRec.cpp" />
     <ClCompile Include="serPortList.cpp" />
     <ClCompile Include="serUpdate.cpp" />
@@ -98,6 +99,9 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="serPortList.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="ispProgram.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

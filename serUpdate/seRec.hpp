@@ -7,12 +7,12 @@ class serialRecThread:public QObject
     Q_OBJECT
     public:
         serialRecThread();
-        serialRecThread(QSerialPort*);
+        serialRecThread(QSerialPort*, QMutex*);
         ~serialRecThread();
-        void StartRec();
         
     private:
         QSerialPort* recSerialName;
+        QMutex* serStringMutex;
     private slots:
         void run();
     signals:
