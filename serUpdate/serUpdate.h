@@ -10,7 +10,6 @@
 
 #include <QMutex>
 extern bool ackFlag;
-extern QSerialPort* mySerial;
 class serUpdate : public QMainWindow
 {
     Q_OBJECT
@@ -22,7 +21,7 @@ public:
     
 private:
     Ui::serUpdateClass ui;
-    
+    QSerialPort* mySerial = new QSerialPort();
     QTextCodec* codec = QTextCodec::codecForName("utf8");
     QString serRecData;
     void startSerialRec();
@@ -34,4 +33,5 @@ private slots:
     void onUploadPushButtom_callback();
     void UpdateSerialData(QString data);
     void processIspStatus(qint8, QString);
+    void sendChar(QByteArray data);
 };

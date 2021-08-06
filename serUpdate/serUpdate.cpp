@@ -3,8 +3,9 @@
 #include "serPortList.hpp"
 #include "seRec.hpp"
 #include "ispProgram.hpp"
-bool ackFlag = false;
-QSerialPort* mySerial = new QSerialPort();
+
+#include <QSemaphore>
+QSemaphore ackGet(0);
 serUpdate::serUpdate(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -74,11 +75,12 @@ void serUpdate::startSerialRec()
 }
 void serUpdate::UpdateSerialData(QString data)
 {
-    QString ackChar = 0x7f;
+
+    QString ackChar = 0x79,checkData;
     this->serRecData = data;
     if (this->serRecData[0] == ackChar)
     {
-        ackFlag = true;
+        ackGet.release();
     }
 }
 void serUpdate::onOpenFilePushButtom_callback()
@@ -107,6 +109,10 @@ void serUpdate::onUploadPushButtom_callback()
     ispSer->moveToThread(ispThread);
     ispThread->start();
     QObject::connect(ispSer, SIGNAL(onNewSerialIspStatus(qint8, QString)), this, SLOT(processIspStatus(qint8, QString)));
+    QObject::connect(ispSer, SIGNAL(sendByte(QByteArray)), this, SLOT(sendChar(QByteArray)));
+    QObject::connect(ispSer, SIGNAL(downLoadPercent(int)), ui.downloadProgress, SLOT(setValue(int)));
+
+    //mySerial->write("hello");
 }
 void serUpdate::processIspStatus(qint8 processClass, QString data)
 {
@@ -126,4 +132,11 @@ void serUpdate::processIspStatus(qint8 processClass, QString data)
     default:
         break;
     }
+}
+
+void serUpdate::sendChar(QByteArray data)
+{
+    serMutex->lock();
+    mySerial->write(data);
+    serMutex->unlock();
 }

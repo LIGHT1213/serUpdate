@@ -2,6 +2,9 @@
 #include <QThread>
 #include "serUpdate.h"
 #include<windows.h>
+#include <QSemaphore>
+#include <QDebug>
+extern QSemaphore ackGet;
 class ispProgramThread :public QObject
 {
 	Q_OBJECT
@@ -17,24 +20,42 @@ public:
     {
         delete ispSerialName;
     }
+    QByteArray HexStringToByteArray(QString hex)
+    {
+        int p;
 
+        QByteArray ret;
+        QStringList lst = hex.simplified().split(' ');//转化为字符串数组
+        ret.resize(lst.count());
+        for (int i = 0; i < lst.count(); i++)
+        {
+            p = lst[i].toInt(NULL, 16);
+            ret[i] = p;
+            qDebug() << ret[i] << endl;
+
+        }
+        
+        return ret;
+    }
 private:
     QSerialPort* ispSerialName;
     QMutex* ispSerMutex;
     QByteArray binData;
     QString serText;
-    void sendChar(QString);
-    void sendChar(QByteArray);
     void waitACK()
     {
-        while(ackFlag == false)
+        while(ackGet.available()>0)
         {
             Sleep(10);
         }
-        ackFlag = false;
+        ackGet.acquire();
     }
+
 private slots:
     void run();
+
 signals:
     void onNewSerialIspStatus(qint8, QString);
+    void sendByte(QByteArray);
+    void downLoadPercent(int);
 };
