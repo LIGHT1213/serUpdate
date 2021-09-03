@@ -39,7 +39,8 @@ void ispProgramThread::run()
         emit sendByte(command);
         waitACK();
         qDebug() << "31,ce"<<endl;
-        quint8 appAddress[4], sumCheck;
+        quint8 sumCheck;
+        int appAddress[4];
         appAddress[0] = appAddressString.mid(0, 1).toInt(NULL,16);appAddress[1] = appAddressString.mid(1, 2).toInt(NULL, 16);
         appAddress[2] = appAddressString.mid(3, 2).toInt(NULL, 16);appAddress[3] = appAddressString.mid(5, 2).toInt(NULL, 16);
         
@@ -47,23 +48,31 @@ void ispProgramThread::run()
         sendAddress.clear();
         for (int j = 0; j < 4; j++)
         {
-            sendAddress.append(QByteArray::number(appAddress[j]));
+            //sendAddress.append(QByteArray::number(appAddress[j]));
+            sendAddress.append(intToByte(appAddress[j]));
         }
-        sendCheck = QByteArray::number(sumCheck);
+        sendCheck.clear();
+        sendCheck .append((intToByte(sumCheck)));
         emit sendByte(sendAddress);
         emit sendByte(sendCheck);
         waitACK();
         qDebug() << "address"<<endl;
         appAddressString=QString::number(appAddressString.toInt(NULL, 16)+0X100);
-        QByteArray curWriteData = binData.mid(i * 256, i * 256 + 256);
+
+        QByteArray curWriteData = binData.mid(i * 256, 255);
         sumCheck = 0;
-        for (int j = 0; j < 256; j++)
+        sumCheck = curWriteData[0] ^ curWriteData[1];
+        for (int j = 2; j < 256; j=j+2)
         {
-            sumCheck ^= curWriteData[j];
+            sumCheck = curWriteData[j]^curWriteData[j+1]^ sumCheck;
         }
-        sumCheck ^= 0xff;
-        sendCheck = QByteArray::number(sumCheck);
-        emit sendByte(QByteArray::number(255));
+        command.resize(1);
+        command[0] = 0xff;
+        sumCheck = sumCheck^ command[0];
+        sendCheck.append((intToByte(sumCheck)));
+        command.resize(1);
+        command[0] = 0xff;
+        emit sendByte(command);
         emit sendByte(curWriteData);
         emit sendByte(sendCheck);
         waitACK();
@@ -71,3 +80,4 @@ void ispProgramThread::run()
         emit downLoadPercent(i);
     }
 }
+

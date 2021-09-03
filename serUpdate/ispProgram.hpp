@@ -50,6 +50,13 @@ private:
         }
         ackGet.acquire();
     }
+    QByteArray intToByte(int i)
+    {
+        QByteArray abyte0;
+        abyte0.resize(1);
+        abyte0[0] = (uchar)(0x000000ff & i);
+        return abyte0;
+    }
 
 private slots:
     void run();
